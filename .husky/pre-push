@@ -1,0 +1,39 @@
+echo ""
+echo "======================================"
+echo "|        PRE-PUSH HOOK (Husky)       |"
+echo "======================================"
+echo ""
+echo "  Task: Running build check"
+echo ""
+
+echo -e "Step 1/2: \033[32mBuilding...\033[0m"
+echo "--------------------------------------"
+
+npm run build --silent
+STATUS=$?
+
+if [ $STATUS -ne 0 ]; then
+  echo ""
+  echo -e "\033[31mBuild failed. Push aborted.\033[0m"
+  echo ""
+  exit 1
+else
+  echo ""
+  echo -e "\033[32mBuild succeeded.\033[0m"
+fi
+
+echo ""
+echo -e "Step 2/2: \033[32mRemove build folder...\033[0m"
+echo "--------------------------------------"
+
+if [ -d dist ]; then
+  rm -rf dist
+  echo -e "\033[32mRemove build folder succeeded.\033[0m"
+else
+  echo "No dist folder found. Skipping removal."
+fi
+
+echo ""
+echo -e "\033[32mAll checks passed. Push allowed!\033[0m"
+echo ""
+exit 0

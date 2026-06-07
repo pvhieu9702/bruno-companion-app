@@ -1,0 +1,53 @@
+echo ""
+echo "======================================"
+echo "|       PRE-COMMIT HOOK (Husky)      |"
+echo "======================================"
+echo ""
+echo "  Task: Running lint-staged + TypeScript check"
+echo ""
+
+if ! git diff --cached --quiet; then
+  echo "Detected staged files. Starting checks..."
+else
+  echo "No staged files detected. Skipping lint."
+  exit 0
+fi
+
+echo ""
+echo -e "Step 1/2: \033[32mLinting & formatting staged files...\033[0m"
+echo "--------------------------------------"
+
+npx lint-staged --quiet
+STATUS=$?
+
+if [ $STATUS -ne 0 ]; then
+  echo ""
+  echo -e "\033[31mLint-staged failed. Commit aborted.\033[0m"
+  echo ""
+  exit 1
+else
+  echo ""
+  echo -e "\033[32mAll staged files passed lint & format.\033[0m"
+fi
+
+echo ""
+echo -e "Step 2/2: \033[32mTypescript checking...\033[0m"
+echo "--------------------------------------"
+
+npx tsc --skipLibCheck --noEmit
+STATUS=$?
+
+if [ $STATUS -ne 0 ]; then
+  echo ""
+  echo -e "\033[31mTypeScript check failed. Commit aborted.\033[0m"
+  echo ""
+  exit 1
+else
+  echo ""
+  echo -e "\033[32mTypeScript check passed.\033[0m"
+fi
+
+echo ""
+echo -e "\033[32mAll checks passed. Commit allowed!\033[0m"
+echo ""
+exit 0

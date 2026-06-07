@@ -15,23 +15,23 @@ jobs:
       matrix:
         include:
           - platform: ubuntu-latest
-            rust-targets: ""
-            args: ""
+            rust-targets: ''
+            args: ''
           - platform: macos-latest
             rust-targets: aarch64-apple-darwin,x86_64-apple-darwin
             args: --target universal-apple-darwin
           - platform: windows-latest
-            rust-targets: ""
-            args: ""
+            rust-targets: ''
+            args: ''
 
     runs-on: ${{ matrix.platform }}
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version: 24
           cache: npm
@@ -65,8 +65,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tagName: ${{ github.ref_name }}
-          releaseName: "Bruno Companion ${{ github.ref_name }}"
-          releaseBody: "See the assets below to download and install."
+          releaseName: 'Bruno Companion ${{ github.ref_name }}'
+          releaseBody: 'See the assets below to download and install.'
           releaseDraft: false
           prerelease: false
           args: ${{ matrix.args }}
